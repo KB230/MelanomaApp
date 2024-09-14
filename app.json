@@ -11,17 +11,36 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "plugins":[
+      [
+
+      "expo-image-picker", 
+      {
+        "photosPermission": "The app accesses your photos",
+        "cameraPermission": "This app needs access to your camera"
+      }
+      ]
+    ],
+    
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true, 
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app needs access to your camera"
+      }
+
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "CAMERA"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     }
+    
   }
 }

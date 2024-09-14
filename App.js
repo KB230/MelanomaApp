@@ -4,14 +4,15 @@ import ImageViewer from "./components/ImageViewer";
 import Button from "./components/Button";
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
-
+import PredictionComponent from './components/PredictionComponent'; 
 
 const PlaceholderImage = require('./assets/images/background-image.png'); 
 
 //main function. app starts here. 
 export default function App() {
-  //Variable: selectedImage - Function: setSelectedImage
+  //Variable: selectedImage - Function: setSelectedImage  
   const [selectedImage, setSelectedImage] = useState(null);  //useState() -- defaults a value to null unless the function is called.
+
   
   //Pick Image from Library Function -- uses ImagePicker library function. -- Caled through button onPress parameter
   const pickImageAsync = async () => {
@@ -58,6 +59,7 @@ export default function App() {
       <View style={styles.imageContainer}>
         <ImageViewer placeholderImageSource={PlaceholderImage} selectedImage={selectedImage}/> 
       </View>
+      {selectedImage && <PredictionComponent imageUri={selectedImage} />}   
       <View style={styles.container}>
         <Button theme = {"primary"} label = {"Choose an photo."} onPress={pickImageAsync}></Button> 
         <Button label = {"Take a photo."} onPress={() => uploadImage()}></Button>
