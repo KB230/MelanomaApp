@@ -117,7 +117,7 @@ export default function PredictionComponent({ imageUri }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20, // Adjust the margin as needed
+    marginTop: 5, // Adjust the margin as needed
     padding: 10,
     backgroundColor: '#f8f8f8', // Light background color for contrast
     borderRadius: 8,
@@ -125,8 +125,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center', // Center the text vertically if needed
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
+    shadowOpacity: 0.25,
+    shadowRadius: 3,
     elevation: 5, // For Android shadow
   },
   predictionText: {
