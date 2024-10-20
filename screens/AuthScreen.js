@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, StyleSheet, View, AppState } from 'react-native';
+import { Alert, StyleSheet, View, AppState, Image } from 'react-native';
 import { supabase } from '../lib/supabase';
 import { Button, Input } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';  // For navigation
 
-
 // Tells Supabase Auth to continuously refresh the session automatically if
-// the app is in the foreground. When this is added, you will continue to receive
-// `onAuthStateChange` events with the `TOKEN_REFRESHED` or `SIGNED_OUT` event
-// if the user's session is terminated. This should only be registered once.
+// the app is in the foreground.
 AppState.addEventListener('change', (state) => {
   if (state === 'active') {
     supabase.auth.startAutoRefresh()
@@ -18,9 +15,9 @@ AppState.addEventListener('change', (state) => {
 })
 
 export default function AuthScreen() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();  // Use navigation hook
 
   // Check if user is signed in and navigate to main app
@@ -79,29 +76,44 @@ export default function AuthScreen() {
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input
           label="Email"
-          leftIcon={{ type: 'font-awesome', name: 'envelope' }}
+          leftIcon={{ type: 'font-awesome', name: 'envelope', color: '#7b6645' }}  // Icon color
           onChangeText={(text) => setEmail(text)}
           value={email}
           placeholder="email@address.com"
           autoCapitalize={'none'}
+          labelStyle={styles.label}  // Label style
+          inputStyle={styles.input}  // Input text style
+          placeholderTextColor={'#7b6645'}  // Placeholder color
         />
       </View>
       <View style={styles.verticallySpaced}>
         <Input
           label="Password"
-          leftIcon={{ type: 'font-awesome', name: 'lock' }}
+          leftIcon={{ type: 'font-awesome', name: 'lock', color: '#7b6645' }}  // Icon color
           onChangeText={(text) => setPassword(text)}
           value={password}
           secureTextEntry={true}
           placeholder="Password"
           autoCapitalize={'none'}
+          labelStyle={styles.label}  // Label style
+          inputStyle={styles.input}  // Input text style
+          placeholderTextColor={'#7b6645'}  // Placeholder color
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} />
+        <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} buttonStyle={styles.button} />
       </View>
       <View style={styles.verticallySpaced}>
-        <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
+        <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} buttonStyle={styles.button} />
+      </View>
+
+      {/* Add image here */}
+      <View style={styles.imageContainer}>
+        <Image
+          source={require('../assets/images/logo.png')}  // Use require for local images
+          style={styles.image}
+          resizeMode="contain"
+        />
       </View>
     </View>
   )
@@ -109,8 +121,10 @@ export default function AuthScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
+    flex: 1,
+    backgroundColor: '#f0efeb',  // Set background color
     padding: 12,
+    justifyContent: 'center',
   },
   verticallySpaced: {
     paddingTop: 4,
@@ -120,4 +134,22 @@ const styles = StyleSheet.create({
   mt20: {
     marginTop: 20,
   },
-})
+  button: {
+    backgroundColor: '#7b6645',  // Set button color
+  },
+  imageContainer: {
+    marginTop: 30,
+    alignItems: 'center',
+  },
+  image: {
+    width: '90%',  // Increase the width of the image
+    height: 200,   // Increase the height of the image
+  },
+  label: {
+    color: '#7b6645',  // Label color
+  },
+  input: {
+    color: '#7b6645',  // Input text color
+  },
+});
+

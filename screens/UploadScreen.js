@@ -6,58 +6,50 @@ import * as ImagePicker from 'expo-image-picker';
 import { useState, useEffect } from 'react';
 import PredictionComponent from '../components/PredictionComponent'; 
 import { supabase } from '../lib/supabase';
-import { useNavigation } from '@react-navigation/native'; // Import useNavigation
-import { decode } from "base64-arraybuffer";
+import { useNavigation } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
+import {decode} from 'base64-arraybuffer';
 import * as FileSystem from 'expo-file-system';
-//import { nanoid } from "nanoid";
 
-const PlaceholderImage = require('../assets/images/background-image.png'); 
 
-//main function. app starts here. 
-export default function UploadScreen() {
-  const navigation = useNavigation(); // Get the navigation object
-  //Variable: selectedImage - Function: setSelectedImage  
-  const [selectedImage, setSelectedImage] = useState(null);  //useState() -- defaults a value to null unless the function is called.
+const PlaceholderImage = require('../assets/images/cancer_image.png');  // Filepath to default image
+const LogoImage = require('../assets/images/logo.png');  // Filepath to logo image
 
+export default function UploadScreen({ setIsAuthenticated }) {
   
-  //Pick Image from Library Function -- uses ImagePicker library function. -- Caled through button onPress parameter
+  const [selectedImage, setSelectedImage] = useState(null);
+  const navigation = useNavigation();
+  
+  // Pick Image from Library Function
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true, //allows cropping of image
-      quality: 1, //sets quality to max
+      allowsEditing: true,
+      quality: 1,
     });
-    if(!result.canceled) //checks if the result is NOT canceled
-    {
-       /*
-       sets the variable to the uri of the image. the result value is a list of properties. 
-       Thus you must get the uri property from the first element (a dictionary) from the list
-       */
+    if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
       sendToDB(result.assets[0].uri); 
-    }
-    else
-    {
-      //Notifies user if image is not selected
+    } else {
       alert('You did not select any image.');
     }
   }
-  //Function that uploads image directly from Camera -- Called through button onPress parameter
+
+  // Function to upload image from Camera
   const uploadImage = async () => {
     try {
-      await ImagePicker.requestCameraPermissionsAsync();  //use different ImagePicker function to get camera permission
-      let result = await ImagePicker.launchCameraAsync({ //If permission given launch Camera in app 
-        cameraType : ImagePicker.CameraType.back, //Opens to back camera
-        allowsEditing: true, //Crops Allowed
-        quality: 1 //Max Quality 
+      await ImagePicker.requestCameraPermissionsAsync();
+      let result = await ImagePicker.launchCameraAsync({
+        cameraType: ImagePicker.CameraType.back,
+        allowsEditing: true,
+        quality: 1,
       });
 
-      if(!result.canceled)
-      {
-        await setSelectedImage(result.assets[0].uri); //Calls setSelectedImage Function. 
+      if (!result.canceled) {
+        await setSelectedImage(result.assets[0].uri);
         sendToDB(result.assets[0].uri); 
       }
     } catch (error) {
-      alert("Error uploading image: " + error.message) //Gives error if image does not upload
+      alert("Error uploading image: " + error.message);
     }
   }
   const generateRandomString = (length = 10) => {
@@ -68,7 +60,6 @@ export default function UploadScreen() {
     }
     return result;
   };
-  
   const sendToDB = async (uri) => {
     try {
       // Convert the image file at the URI to base64
@@ -117,48 +108,73 @@ export default function UploadScreen() {
     }
   };
 
-  async function handleLogout() {
-    const { error } = await supabase.auth.signOut();
-    console.log("Logged Out");
-    navigation.navigate('AuthScreen'); // Navigate back to AuthScreen
-    if (error) Alert.alert(error.message);
-  }
-  
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setIsAuthenticated(false);
+
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'AuthScreen' }],
+      })
+    );
+  };
   
-  //Displays app on screen. Uses ImageViewer and Button components (in components folder). Sets custom properties which are used in those classes. 
   return (
     <View style={styles.container}>
+      <Image source={LogoImage} style={styles.logo} />
       <View style={styles.logOutContainer}>
-        <Button label = {"Log Out."} onPress={handleLogout}></Button>
+        <Button label={"Log Out"} onPress={handleLogout} theme={"small"} />
       </View>
       <View style={styles.imageContainer}>
-        <ImageViewer placeholderImageSource={PlaceholderImage} selectedImage={selectedImage}/> 
+        <ImageViewer placeholderImageSource={PlaceholderImage} selectedImage={selectedImage} /> 
       </View>
       {selectedImage && <PredictionComponent imageUri={selectedImage} />}   
-      <View style={styles.container}>
-        <Button theme = {"primary"} label = {"Choose an photo."} onPress={pickImageAsync}></Button> 
-        <Button label = {"Take a photo."} onPress={() => uploadImage()}></Button>
+      <View style={styles.buttonContainer}>
+        <Button label={"Choose a photo."} onPress={pickImageAsync} />
+        <Button label={"Take a photo."} onPress={uploadImage} />
+      </View>
+      <View style={styles.modelInfoButtonContainer}>
+        <Button label={"Model Info"} onPress={() => navigation.navigate('ModelInfo')} theme="small"></Button>
       </View>
       <StatusBar style="auto" />
     </View>
   );
 }
 
-//StyleSheet
+// StyleSheet
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffe9cc', //Background color of app
+    backgroundColor: '#f0efeb', // Main background color
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start', // Align items at the top
+  },
+  logo: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    width: 70, // Increased width for the logo
+    height: 70, // Increased height for the logo
   },
   imageContainer: {
     flex: 1,
-    paddingTop: 120, //Container for image
+    paddingTop: 10,
+    marginTop: 150, // Adjusted margin to separate image from logo
   },
-  footerContainer: {
-    flex : 1/3, 
-    alignItems: 'center', //Container for buttons
+  logOutContainer: {
+    position: 'absolute',
+    top: 30, // Keeping the log-out button fixed at this position
+    left: 300
+  },
+  buttonContainer: {
+    alignItems: 'center',
+    flex: 1,
+    marginTop: 75 // Adjust margin to move buttons closer to the image viewer
+  },
+  modelInfoButtonContainer: {
+    alignItems:'center', 
+    bottom:40
   }
 });

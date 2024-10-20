@@ -4,18 +4,25 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { supabase } from './lib/supabase'; // Make sure this path is correct
 import AuthScreen from './screens/AuthScreen';
 import UploadScreen from './screens/UploadScreen';
+import ModelInfoScreen from './screens/ModelInfoScreen'; // Import the new screen
 import GalleryScreen from './screens/GalleryScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const MainApp = () => (
-  <Tab.Navigator>
-    <Tab.Screen name="Upload" component={UploadScreen} />
-    {/*<Tab.Screen name="Gallery" component={GalleryScreen} />*/}
-  </Tab.Navigator>
-);
+
+const MainApp = ({ setIsAuthenticated }) => {
+  console.log("MainApp rendered");
+  return (
+    <Tab.Navigator>
+      <Tab.Screen
+        name="Upload"
+        children={() => <UploadScreen setIsAuthenticated={setIsAuthenticated} />}
+      />
+    </Tab.Navigator>
+  );
+};
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -38,9 +45,27 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={isAuthenticated ? "MainApp" : "AuthScreen"}>
-        <Stack.Screen name="AuthScreen" component={AuthScreen} />
-        <Stack.Screen name="MainApp" component={MainApp} options={{ headerShown: false }} />
+        <Stack.Screen
+          name="AuthScreen"
+          component={AuthScreen}
+          options={{
+            headerShown: false,
+            cardStyle: { backgroundColor: '#FFF8E1' },
+          }}
+        />
+        <Stack.Screen
+          name="MainApp"
+          options={{ headerShown: false }}
+        >
+          {() => <MainApp setIsAuthenticated={setIsAuthenticated} />}
+        </Stack.Screen>
+        <Stack.Screen
+          name="ModelInfo"
+          component={ModelInfoScreen}
+          options={{ title: 'Model Information'}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+

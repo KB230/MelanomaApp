@@ -7,12 +7,13 @@ export default function ImageViewer({placeholderImageSource, selectedImage})
     return <Image source = {imageSource} style = {styles.image}/>
 }
 
-const styles = StyleSheet.create(
-    {
-        image : {
-            width: 256, 
-            height: 256, 
-            borderRadius : 0
-        }
-    }
-)
+const styles = StyleSheet.create({
+    image: {
+      width: 256,
+      height: 256,
+      borderRadius: 2,  // Rounded corners for a modern feel
+      borderWidth: 3,
+      borderColor: '#000000',  // Border to match button colors
+    },
+  });
+  

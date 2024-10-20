@@ -89,8 +89,16 @@ export default function PredictionComponent({ imageUri }) {
         console.log("Prediction made:", prediction.dataSync());
         const predictedClass = prediction.argMax(-1).dataSync()[0];
         console.log("Predicted Class:", predictedClass);
+        let  output = ""
+        if (predictedClass == "0"){
+          output = "Benign Lesion";;
+        }
+        else {
+          output = "Malignant Lesion"; 
+        }
         // Map predictedClass to your class labels if available
-        setPrediction(predictedClass);
+        console.log("Output:", output);
+        setPrediction(output);
       }
     }
     predict();
@@ -117,21 +125,16 @@ export default function PredictionComponent({ imageUri }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 5, // Adjust the margin as needed
+    marginTop: 5,
     padding: 10,
-    backgroundColor: '#f8f8f8', // Light background color for contrast
+    backgroundColor: '#FFF3E0', // Light cream background to match
     borderRadius: 8,
-    alignItems: 'center', // Center the text horizontally
-    justifyContent: 'center', // Center the text vertically if needed
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3,
-    elevation: 5, // For Android shadow
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   predictionText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333', // Dark text color for readability
+    color: '#a88465',  // Match prediction text color to the button color
   },
 });

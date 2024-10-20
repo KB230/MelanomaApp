@@ -11,21 +11,15 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 */
 export default function Button({label, theme, onPress})
 {
-    if(theme == "primary")
+    if(theme == "small")
     {
         return (
-            <View style={[styles.buttonContainer, { borderWidth: 4, borderColor: "#ffd33d", borderRadius: 18 }]}>
+            <View style={[styles.smallContainer]}>
               <Pressable
-                style={[styles.button, { backgroundColor: "#fff" }]}
+                style={[styles.logOutButton]}
                 onPress={onPress} 
               >
-                <FontAwesome
-                  name="picture-o"
-                  size={18}
-                  color="#25292e"
-                  style={styles.buttonIcon}
-                />
-                <Text style={[styles.buttonLabel, { color: "#25292e" }]}>{label}</Text>
+                <Text style={[styles.logOutButtonLabel]}>{label}</Text>
               </Pressable>
             </View>
           );       
@@ -41,31 +35,46 @@ export default function Button({label, theme, onPress})
     );
 }
 
-const styles = new StyleSheet.create
-(
-    {
-        buttonContainer: {
-            width: 320,
-            height: 68,
-            marginHorizontal: 20,
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 3,
-          },
-          button: {
-            borderRadius: 10,
-            width: '100%',
-            height: '100%',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'row',
-          },
-          buttonIcon: {
-            paddingRight: 8,
-          },
-          buttonLabel: {
-            color: '#2e2b36',
-            fontSize: 16,
-          },
-    }
-);
+const styles = StyleSheet.create({
+  buttonContainer: {
+    width: 280,
+    height: 57,
+    marginHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 3,
+  },
+  button: {
+    borderRadius: 5,
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    backgroundColor: '#8e7c5f',  // Brown button
+  },
+  buttonLabel: {
+    color: '#FFFFFF',  // White text
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  smallContainer: {
+    width: 100, 
+    height: 50, 
+    left: 0,
+    marginHorizontal: 0, 
+    padding: 2
+  },
+  logOutButton: {
+    borderRadius: 0, 
+    width: '100%', 
+    height: '100%', 
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  logOutButtonLabel: {
+    color: '#2e1c0d', 
+    fontSize: 16, 
+    fontWeight: 'bold'
+  }
+});
