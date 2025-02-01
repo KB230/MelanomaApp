@@ -20,6 +20,10 @@ const MainApp = ({ setIsAuthenticated }) => {
         name="Upload"
         children={() => <UploadScreen setIsAuthenticated={setIsAuthenticated} />}
       />
+      <Tab.Screen
+        name="Gallery"
+        children={() => <GalleryScreen/>}
+      />
     </Tab.Navigator>
   );
 };

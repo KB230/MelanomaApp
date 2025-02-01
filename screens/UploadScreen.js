@@ -92,7 +92,7 @@ export default function UploadScreen({ setIsAuthenticated }) {
   
       // Upload the ArrayBuffer to Supabase storage
       const { data, error } = await supabase.storage
-        .from('image_files')  // Make sure this is your correct bucket name
+        .from('image_files')  
         .upload(`${userId}/${fileName}`, arrayBuffer, {
           contentType: `image/${fileExt}`,
         });
